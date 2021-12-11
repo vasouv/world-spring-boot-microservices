@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+
+  city-service:
+    build:
+      context: ./city-service/.
+      dockerfile: Dockerfile
+    container_name: city-service-container
+    image: city-service
+    ports:
+      - 8081:8081
+    networks:
+      - world-spring-boot-microservices-network
+
+  country-service:
+    build:
+      context: ./country-service/.
+      dockerfile: Dockerfile
+    container_name: country-service-container
+    image: country-service
+    ports:
+      - 8082:8082
+    networks:
+      - world-spring-boot-microservices-network
+
+  country-language-service:
+    build:
+      context: ./country-language-service/.
+      dockerfile: Dockerfile
+    container_name: country-language-service-container
+    image: country-language-service
+    ports:
+      - 8083:8083
+    networks:
+      - world-spring-boot-microservices-network
+
+networks:
+  world-spring-boot-microservices-network:
