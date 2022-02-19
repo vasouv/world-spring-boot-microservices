@@ -10,6 +10,7 @@
 		<module>country-service</module>
 		<module>city-service</module>
 		<module>country-language-service</module>
+		<module>gateway-service</module>
 	</modules>
 	
 </project>
