@@ -2,12 +2,10 @@ package vs.gatewayservice;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -16,22 +14,31 @@ import java.util.List;
 @RequestMapping("world-microservices")
 public class WorldMicroservicesController {
 
-    RestTemplate restTemplate = new RestTemplate();
-
     @Value("${country.service}")
     String countryService;
 
-    @GetMapping("countries")
-    public ResponseEntity<List<Country>> countries() {
+    WebClient webClient = WebClient.create();
 
-        String uri = UriComponentsBuilder
+    @GetMapping("countries")
+    public List<Country> countries() {
+
+        String countryServiceURL = UriComponentsBuilder
                 .fromUriString(countryService)
                 .path("/countries")
                 .build()
                 .toUriString();
 
-        return restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-        });
+        return webClient
+                .get()
+                .uri(countryServiceURL)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Country>>() {})
+                .block();
+
+    }
+
+    @GetMapping("countries/details")
+    public void countryDetails() {
 
     }
 
